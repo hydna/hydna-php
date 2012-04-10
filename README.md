@@ -1,8 +1,3 @@
-Hydna PHP Client Library
-This first version of our client library for PHP implements support for the Hydna Push API. Future versions will include support for the full set of features.
-
-More info: https://www.hydna.com/
-
 # Hydna PHP Client Library
 
 This first version of our client library for PHP implements support for the
