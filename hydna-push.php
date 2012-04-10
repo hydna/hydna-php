@@ -2,14 +2,14 @@
 
 class HydnaUtil{
 	
-	const MAX_PAYLOAD_SIZE		= 0xFFFFF8;
+	const MAX_PAYLOAD_SIZE		= 10240;
 	const MAX_TOKEN_SIZE		= 0xFFF8;
 	const MAX_CHANNEL_VALUE 	= 0xFFFFFFF;
 	const DEFAULT_CHANNEL		= 1;
 	
 	public static function clean_payload($data){
 		
-		if(mb_strlen($data, "utf-8") > self::MAX_PAYLOAD_SIZE){
+		if(mb_strlen($data, "UTF-8") > self::MAX_PAYLOAD_SIZE){
 			throw new Exception("Payload exceeds maximum length allowed");
 		}
 		
@@ -26,6 +26,10 @@ class HydnaUtil{
 	}
 	
 	public static function clean_prio($prio){
+		
+		if(!is_numeric($prio)){
+			throw new Exception("Priority needs to be a number between 1-3");
+		}
 		
 		if($prio > 3 | $prio < 0){
 			throw new Exception("Priority needs to be 1-3");
@@ -60,7 +64,7 @@ class HydnaUtil{
 		
 		$parts = explode("/",$path);
 		
-		if(count($parts) > 2){
+		if(count($parts) > 3){
 			throw new Exception("Unable to parse channel");
 		}
 		

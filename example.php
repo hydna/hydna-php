@@ -2,12 +2,12 @@
 
 require("hydna-push.php");
 
-$hydna = new Hydna(); 
+$hydna = new Hydna();
 
 try{
 	$hydna->push("http://public.hydna.net/4000", "Hello World from PHP");
 }catch(Exception $e){
-	print $e->getMessage();
+	print $e->getMessage()."\n";
 }
 
 ?>
