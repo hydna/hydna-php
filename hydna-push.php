@@ -28,11 +28,11 @@ class HydnaUtil{
 	public static function clean_prio($prio){
 		
 		if(!is_numeric($prio)){
-			throw new Exception("Priority needs to be a number between 1-3");
+			throw new Exception("Priority needs to be a number between 1-4");
 		}
 		
-		if($prio > 3 | $prio < 0){
-			throw new Exception("Priority needs to be 1-3");
+		if($prio > 4 | $prio < 1){
+			throw new Exception("Priority needs to be 1-4");
 		}
 		
 		return $prio;
@@ -99,11 +99,11 @@ class HydnaUtil{
 
 class Hydna{
 	
-	public $agent			= "hydna-php-push";
+	public $agent = "hydna-php-push";
 	
-	public static $TIMEOUT 	= 5;
+	public static $TIMEOUT = 5;
 	
-	public function push($domain, $data, $prio=0, $ctoken=""){
+	public function push($domain, $data, $prio=1, $ctoken=""){
 		
 		$headers = array('Content-Type: text/plain', sprintf('User-Agent: %s', $this->agent));
 		
