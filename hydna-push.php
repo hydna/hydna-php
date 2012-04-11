@@ -9,6 +9,10 @@ class HydnaUtil{
 	
 	public static function clean_payload($data){
 		
+		if(empty($data)){
+			throw new Exception("Payload excepted");
+		}
+		
 		if(mb_strlen($data, "UTF-8") > self::MAX_PAYLOAD_SIZE){
 			throw new Exception("Payload exceeds maximum length allowed");
 		}
@@ -152,11 +156,11 @@ class Hydna{
 		curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, Hydna::$TIMEOUT);
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $headers);
-		
-		if(!empty($data)){
-			curl_setopt($curl_handle, CURLOPT_POST, true);
-			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data);
-		}
+			
+		$data = HydnaUtil::clean_data($data);
+			
+		curl_setopt($curl_handle, CURLOPT_POST, true);
+		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data);
 		
 		$result = curl_exec($curl_handle);
 		
