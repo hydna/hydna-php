@@ -33,11 +33,11 @@ class HydnaUtil{
 	public static function clean_prio($prio){
 		
 		if(!is_numeric($prio)){
-			throw new Exception("Priority needs to be a number 1-4");
+			throw new Exception("Priority needs to be a number 0-3");
 		}
 		
-		if($prio > 4 | $prio < 1){
-			throw new Exception("Priority needs to be 1-4");
+		if($prio > 3 | $prio < 0){
+			throw new Exception("Priority needs to be 0-3");
 		}
 		
 		return $prio;
@@ -141,7 +141,7 @@ class Hydna{
 	
 	private function send($url, $headers, $data){
 		
-		if (!extension_loaded('curl')){
+		if(!extension_loaded('curl')){
 			die('Sorry cURL is not installed!');
 		}
 		
@@ -171,7 +171,7 @@ class Hydna{
 		
 		curl_close($curl_handle);
 		
-		if( $code != 200 ){
+		if($code != 200){
 			throw new Exception($result);
 		}
 		
