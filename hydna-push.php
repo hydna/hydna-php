@@ -72,6 +72,17 @@ class HydnaUtil{
 		if(count($parts) > 3){
 			throw new Exception("Unable to parse channel");
 		}
+        
+        $pos = strrpos($parts[1], 'x');
+        
+        if($pos !== false){
+            $channel = hexdec(substr($parts[1], $pos+1));
+            if($channel == 0){
+                return 1;
+            }
+            return $channel;            
+        }
+        
 		
 		if(!is_numeric($parts[1])){
 			throw new Exception("Invalid channel"); 
