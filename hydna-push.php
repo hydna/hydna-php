@@ -123,7 +123,7 @@ class Hydna{
 	
 	public static $TIMEOUT = 5;
 	
-	public function push($domain, $data, $prio=1, $ctoken=""){
+	public function push($domain, $data, $prio=0, $ctoken=""){
 		
 		$headers = array('Content-Type: text/plain', sprintf('User-Agent: %s', $this->agent));
 		
