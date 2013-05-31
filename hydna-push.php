@@ -4,7 +4,7 @@ class HydnaUtil{
 	
 	const MAX_PAYLOAD_SIZE		= 0xFFF8;
 	const MAX_TOKEN_SIZE		= 0xFFF8;
-	const MAX_CHANNEL_VALUE 	= 0xFFFFFFF;
+	const MAX_CHANNEL_VALUE 	= 0xFFFFFFFF;
 	const DEFAULT_CHANNEL		= 1;
 	const DEFAULT_PORT			= 80;
 	
@@ -82,7 +82,6 @@ class HydnaUtil{
             }
             return $channel;            
         }
-        
 		
 		if(!is_numeric($parts[1])){
 			throw new Exception("Invalid channel"); 
