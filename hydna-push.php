@@ -2,7 +2,7 @@
 
 class HydnaUtil{
 	
-	const MAX_PAYLOAD_SIZE		= 0xFFF8;
+	const MAX_PAYLOAD_SIZE		= 0xFFFFF8;
 	const MAX_TOKEN_SIZE		= 0xFFF8;
 	const MAX_CHANNEL_VALUE 	= 0xFFFFFFFF;
 	const DEFAULT_CHANNEL		= 1;
