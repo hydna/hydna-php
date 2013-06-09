@@ -2,8 +2,8 @@
 
 class HydnaUtil{
 	
-	const MAX_PAYLOAD_SIZE		= 0xFFFFF8;
-	const MAX_TOKEN_SIZE		= 0xFFF8;
+	const MAX_PAYLOAD_SIZE		= 0xFFF8;
+	const MAX_TOKEN_SIZE		= 0xFFFF;
 	const MAX_CHANNEL_VALUE 	= 0xFFFFFFFF;
 	const DEFAULT_CHANNEL		= 1;
 	const DEFAULT_PORT			= 80;
@@ -11,7 +11,7 @@ class HydnaUtil{
 	public static function clean_payload($data){
 		
 		if(empty($data)){
-			throw new Exception("Payload excepted");
+			throw new Exception("Payload expected");
 		}
 		
 		if(mb_strlen($data, "UTF-8") > self::MAX_PAYLOAD_SIZE){
@@ -89,7 +89,7 @@ class HydnaUtil{
 		
 		$channel = intval($parts[1]);
 		if($channel > self::MAX_CHANNEL_VALUE | $channel == 0){
-			throw new Exception("Invalid channel");
+			throw new Exception("Invalid channel, needs to be 1 - 4294967295");
 		}
 		
 		return $channel;
@@ -126,11 +126,6 @@ class Hydna{
 		
 		$headers = array('Content-Type: text/plain', sprintf('User-Agent: %s', $this->agent));
 		
-		if(!empty($ctoken)){
-			$token = HydnaUtil::clean_token($ctoken);
-			$headers[] = sprintf('X-Token: %s', $token);
-		}
-		
 		$prio = HydnaUtil::clean_prio($prio);
 		$headers[] = sprintf('X-Priority: %s', $prio);
 		
@@ -140,11 +135,6 @@ class Hydna{
 	public function emit($domain, $signal, $ctoken=""){
 
 		$headers = array('X-Emit: yes', 'Content-Type: text/plain', sprintf('User-Agent: %s',$this->agent));
-		
-		if(!empty($ctoken)){
-			$token = HydnaUtil::clean_token($ctoken);
-			$headers[] = sprintf('X-Token: %s', $token);
-		}
 		
 		return $this->send($domain, $headers, $signal);
 	}
@@ -182,7 +172,7 @@ class Hydna{
 		curl_close($curl_handle);
 		
 		if($code != 200){
-			throw new Exception($result);
+			throw new Exception("Error, response code: ".$code);
 		}
 		
 		return true;
