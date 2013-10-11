@@ -4,8 +4,6 @@ class HydnaUtil{
 	
 	const MAX_PAYLOAD_SIZE		= 0xFFF8;
 	const MAX_TOKEN_SIZE		= 0xFFFF;
-	const MAX_CHANNEL_VALUE 	= 0xFFFFFFFF;
-	const DEFAULT_CHANNEL		= 1;
 	const DEFAULT_PORT			= 80;
 	
 	public static function clean_payload($data){
@@ -55,44 +53,15 @@ class HydnaUtil{
 			throw new Exception("No url scheme found");
 		}
 		
-		$channel = HydnaUtil::path_to_channel($components['path']);
 	    $token = HydnaUtil::clean_token($components['query']);
 	
-		return array("scheme" => $components['scheme'], "host" => $components['host'], "channel" => $channel, "token" => $token, "port" => $components['port']);
-	}
-	
-	public static function path_to_channel($path){
-		
-		if(strlen($path) < 2){
-			return self::DEFAULT_CHANNEL;  
-		}
-		
-		$parts = explode("/",$path);
-		
-		if(count($parts) > 3){
-			throw new Exception("Unable to parse channel");
-		}
-        
-        $pos = strrpos($parts[1], 'x');
-        
-        if($pos !== false){
-            $channel = hexdec(substr($parts[1], $pos+1));
-            if($channel == 0){
-                return 1;
-            }
-            return $channel;            
-        }
-		
-		if(!is_numeric($parts[1])){
-			throw new Exception("Invalid channel"); 
-		}
-		
-		$channel = intval($parts[1]);
-		if($channel > self::MAX_CHANNEL_VALUE | $channel == 0){
-			throw new Exception("Invalid channel, needs to be 1 - 4294967295");
-		}
-		
-		return $channel;
+        return array(
+            "scheme" => $components['scheme'],
+            "host" => $components['host'],
+            "channel" => $components['path'],
+            "token" => $token,
+            "port" => $components['port']
+        );
 	}
 	
 	public static function get_url_parts($uri){
@@ -100,7 +69,7 @@ class HydnaUtil{
 		$components = parse_url($uri);
 		
 		if(!array_key_exists("path", $components)){
-			$components['path'] = "";
+			$components['path'] = "/";
 		}
 		
 		if(!array_key_exists("query", $components)){
@@ -124,7 +93,10 @@ class Hydna{
 	
 	public function push($domain, $data, $prio=0, $ctoken=""){
 		
-		$headers = array('Content-Type: text/plain', sprintf('User-Agent: %s', $this->agent));
+        $headers = array(
+            'Content-Type: text/plain',
+            sprintf('User-Agent: %s', $this->agent)
+        );
 		
 		$prio = HydnaUtil::clean_prio($prio);
 		$headers[] = sprintf('X-Priority: %s', $prio);
@@ -134,22 +106,26 @@ class Hydna{
 	
 	public function emit($domain, $signal, $ctoken=""){
 
-		$headers = array('X-Emit: yes', 'Content-Type: text/plain', sprintf('User-Agent: %s',$this->agent));
+        $headers = array(
+            'X-Emit: yes',
+            'Content-Type: text/plain',
+            sprintf('User-Agent: %s',$this->agent)
+        );
 		
 		return $this->send($domain, $headers, $signal);
 	}
 	
 	private function send($url, $headers, $data){
-		
 		if(!extension_loaded('curl')){
 			die('Sorry cURL is not installed!');
 		}
 		
 		$uri = HydnaUtil::parse_uri($url);
-		
+
 		$curl_handle = curl_init();
 		
-		$conn = sprintf('%s://%s:%d/%d/', $uri['scheme'], $uri['host'], $uri['port'], $uri['channel']);
+        $conn = sprintf('%s://%s:%d%s', $uri['scheme'], $uri['host'],
+            $uri['port'], $uri['channel']);
 		
 		if(!empty($uri['token'])){
 			$conn .= sprintf('?%s', $uri['token']);
@@ -177,7 +153,6 @@ class Hydna{
 		
 		return true;
 	}
-	
 }
 
 ?>
