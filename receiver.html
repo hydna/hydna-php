@@ -4,24 +4,23 @@
 	<script type="text/javascript" src="http://cdn.hydna.com/1/hydna.js"></script>
 	
 	<script>
-   		var channel = new HydnaChannel('public.hydna.net/4001', 'r');
+   		var channel = new HydnaChannel('public.hydna.net/cli-test', 'r');
 
 		channel.onopen = function(e) {
 			// read/write connection is ready to use
 			console.log("channel open"); 
 		};
 
-		channel.onerror = function(e) {
-			// an error occured when connecting
-			console.log( e.message );
+		channel.onclose = function(e) {
+			console.log(e.reason);
 		};
 	
 		channel.onmessage = function( e ){
-			alert( e.data );
+			alert(e.data);
 		}
 	
 		channel.onsignal = function(e){
-			alert("received signal "+e.message);
+			alert("received signal " + e.data);
 		}  
 	
 	</script>

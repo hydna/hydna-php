@@ -2,8 +2,7 @@
 
 class HydnaUtil{
 	
-	const MAX_PAYLOAD_SIZE		= 0xFFF8;
-	const MAX_TOKEN_SIZE		= 0xFFFF;
+	const MAX_PAYLOAD_SIZE		= 0xFFFA;
 	const DEFAULT_PORT			= 80;
 	
 	public static function clean_payload($data){
@@ -21,7 +20,7 @@ class HydnaUtil{
 	
 	public static function clean_token($token){
 		
-		if(mb_strlen($token, "UTF-8") > self::MAX_TOKEN_SIZE){
+		if(mb_strlen($token, "UTF-8") > self::MAX_PAYLOAD_SIZE){
 			throw new Exception("Token exceeds maximum length allowed");
 		}
 		
@@ -48,13 +47,13 @@ class HydnaUtil{
 		}
 		
 		$components = HydnaUtil::get_url_parts($uri);
-		
+
 		if(empty($components['scheme'])){
 			throw new Exception("No url scheme found");
 		}
 		
 	    $token = HydnaUtil::clean_token($components['query']);
-	
+		
         return array(
             "scheme" => $components['scheme'],
             "host" => $components['host'],
